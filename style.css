@@ -513,3 +513,53 @@ header .play-btn {
     bottom:10px;
     right:10px;
 }
+
+.pagination{
+    text-align: center;
+}
+
+.pagination a{
+    text-decoration: none;
+    color: #56CCF2;
+    padding: 0.5rem;
+    border: 2px solid #56CCF2;
+    margin: 0 1rem;
+    background-color: white; 
+}
+
+.pagination a:hover{
+    cursor: pointer;
+    background: #56CCF2;
+    color: white;
+}
+
+.secondary-container{
+    max-width: min-content;
+    display: flexbox;
+}
+
+#pagination{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.pageNo{
+    width: 35px;
+    height: 35px;
+    appearance: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background-color: #56CCF2;
+    margin: 5px;
+    transition: 0.4s;
+    color: white;
+    font-size: 18px;;
+}
+
+#pagination button:hover{
+    background-color: #eeee;
+    color: #56CCF2;
+}

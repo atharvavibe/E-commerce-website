@@ -1,29 +1,100 @@
 
 const parentNode = document.getElementById('music-content');
+const displayPagination =  document.getElementById('pagination')
+var currentPage = 1
+const limit = 3
+
+
+
 
 window.addEventListener('DOMContentLoaded', () => {
-    axios.get('http://localhost:3000/admin/products').then((data) => {
-        console.log(data);
-        if(data.request.status === 200){
-            const products = data.data.data;
-            const parentSection = document.getElementById('products');
-            products.forEach(product => {
-                const productHtml = `
-                <div id="album-${product.id}">
-                <div class="image-container">
-                    <h3 class="prod-title">${product.title}</h3>
-                        <img class="prod-images" src=${product.imageUrl} alt="">
-                                    <div class="prod-details">
-                        <span class="price-tag">$${product.price}</span>
-                        <button class="shop-item-button" type='button'>ADD TO CART</button>
-                    </div>
-                </div>`
-            parentSection.innerHTML += productHtml
-            }); 
-        }
+    console.log('loaded')
+    const page = 1
+    axios.get(`http://localhost:3000/admin/products?page=${page}`).then((data) => {
+     const products = data.data.data 
+     showPagination(products)
     })
 });
 
+function showPagination(products){
+    currentPage--;
+   
+   console.log( products)
+   const totalItems = products.length
+   let start = limit * currentPage
+   let end = start + limit
+   let paginatedItems = products.slice(start, end)
+   
+
+ const parentSection = document.getElementById('products');
+ paginatedItems.forEach(product => {
+    const productHtml = `
+    <div id="album-${product.id}" class="secondary-container">
+    <div class="image-container">
+        <h3 class="prod-title">${product.title}</h3>
+            <img class="prod-images" src=${product.imageUrl} alt="">
+                        <div class="prod-details">
+            <span class="price-tag">$${product.price}</span>
+            <button class="shop-item-button" type='button'>ADD TO CART</button>
+        </div>
+    </div>`
+ parentSection.innerHTML += productHtml
+}); 
+
+ setupPagination(products, displayPagination, limit)
+}
+ 
+
+function setupPagination(items, wrapper, limit){
+    wrapper.innerText= "";
+    console.log(displayPagination)
+
+    var page_count = Math.ceil(items.length / limit)
+    for(var i = 1; i<=page_count; i++){
+       var btn = paginationBtn(i, items);
+       wrapper.appendChild(btn)
+    }
+}
+
+function paginationBtn(page, items){
+    console.log(page)
+    var button = document.createElement('button')
+    button.classList.add("pageNo")
+    button.innerText = page
+
+    if(currentPage == page) button.classList.add('active')
+
+    button.addEventListener('click', function (){
+        currentPage = page
+        showPagination(items)
+    })
+
+    return button
+}
+
+// function listProduct(data){
+//     if(data.request.status === 200){
+//         const products = data.data.data;
+//         // console.log(products.length, products)
+//         // const pageCount = Math.ceil(products.length/limit)
+//         // let currentPage;
+//         const url = window.location.href;
+//         // const parentSection = document.getElementById('products');
+//         // products.forEach(product => {
+//         //     const productHtml = `
+//         //     <div id="album-${product.id}" class="secondary-container">
+//         //     <div class="image-container">
+//         //         <h3 class="prod-title">${product.title}</h3>
+//         //             <img class="prod-images" src=${product.imageUrl} alt="">
+//         //                         <div class="prod-details">
+//         //             <span class="price-tag">$${product.price}</span>
+//         //             <button class="shop-item-button" type='button'>ADD TO CART</button>
+//         //         </div>
+//         //     </div>`
+//         // parentSection.innerHTML += productHtml
+//         // }); 
+//     }
+// }
 
 document.addEventListener('click', e => {
  
@@ -109,7 +180,7 @@ function showNotification(message, iserror){
     const notification = document.createElement('div');
     notification.style.backgroundColor = iserror ? 'red' : 'green';
     notification.classList.add('notification');
-    notification.innerHTML = `<h4>${message}<h4>`;
+    notification.innerHTML = `<h4>Added to cart<h4>`;
     container.appendChild(notification);
     setTimeout(()=>{
         notification.remove();
